@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import asyncio
@@ -12,16 +12,28 @@ from calculate_event_generation import calculate_event_rate
 
 app = FastAPI()
 
+
+# ---------- Frontend Serving ----------
+
 frontend_path = Path(__file__).resolve().parent.parent / "frontend"
 
-# Serve static files
-app.mount("/static", StaticFiles(directory=frontend_path), name="static")
+# Only mount static files if folder exists (prevents Render crash)
+if frontend_path.exists():
+
+    app.mount("/static", StaticFiles(directory=frontend_path), name="static")
+
+    @app.get("/")
+    async def serve_dashboard():
+        return FileResponse(frontend_path / "index.html")
+
+else:
+    # fallback route if frontend missing
+    @app.get("/")
+    async def root():
+        return {"message": "Real-time event processing server is running"}
 
 
-@app.get("/")
-async def serve_dashboard():
-    return FileResponse(frontend_path / "index.html")
-
+# ---------- Startup Tasks ----------
 
 @app.on_event("startup")
 async def startup():
@@ -35,6 +47,8 @@ async def startup():
     asyncio.create_task(calculate_event_rate())
 
 
+# ---------- WebSocket ----------
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
 
@@ -44,5 +58,5 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             await websocket.receive_text()
 
-    except:
+    except WebSocketDisconnect:
         manager.disconnect(websocket)
