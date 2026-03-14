@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Real-Time Event Processing Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1 class="title">Real-Time Event Processing Dashboard</h1>
+
+<div class="metrics-grid">
+
+<div class="card">
+<h3>Events Generated</h3>
+<p id="gen">0</p>
+</div>
+
+<div class="card">
+<h3>Events Processed</h3>
+<p id="proc">0</p>
+</div>
+
+<div class="card">
+<h3>Queue Backlog</h3>
+<p id="queue">0</p>
+</div>
+
+<div class="card">
+<h3>Total Revenue</h3>
+<p id="rev">0</p>
+</div>
+<div class="card">
+    <h3>Events/sec</h3>
+    <p id="events-per-sec">0</p>
+</div>
+
+<div class="card">
+    <h3>Workers</h3>
+    <p id="workers">0</p>
+</div>
+
+<div class="card">
+<h3>Total Clients</h3>
+<p id="clients">0</p>
+</div>
+
+<div class="card">
+<h3>Processing Latency</h3>
+<p id="lat">0</p>
+</div>
+
+<div class="card">
+<h3>WebSocket Latency</h3>
+<p id="ws">0</p>
+</div>
+
+</div>
+
+
+<h2 class="section-title">Revenue By Category</h2>
+
+<table class="table">
+<thead>
+<tr>
+<th>Category</th>
+<th>Revenue</th>
+</tr>
+</thead>
+
+<tbody id="revcat"></tbody>
+
+</table>
+
+<script src="/static/dashboard.js"></script>
+
+</body>
+
+</html>
